@@ -1,85 +1,125 @@
 package numberlist.objectlist;
 
 /**
+ * This Money class represent the U.S. currency (Immutable class)
  *
  * @author Phuc Hong Le
  * @version 1 (01/23/2017)
  */
-public class Money {
+public final class Money implements Copiable, Comparable<Money> {
+
     //fields
     private long dollars;
     private byte cents;
-    
+
     //default constuctor and complete constructor
     /**
      * This is the default constructor
      */
-    public Money (){
+    public Money() {
     }
-    
+
     /**
      * This is the complete constructor
-     * 
+     *
      * @param dollars The amount of dollars
      * @param cents The amount of cents
      */
-    public Money(long dollars, byte cents){
+    public Money(long dollars, byte cents) {
         this.dollars = dollars;
         this.cents = cents;
     }
-    
+
     //methods
     /**
-     * Getting the dollar amount 
-     * 
+     * Getting the dollar amount
+     *
      * @return The amount of dollars
      */
-    public long getDollars(){
+    public long getDollars() {
         return dollars;
     }
-    
+
     /**
      * Getting the cents amount
-     * 
+     *
      * @return The amount of cents
      */
-    public byte getCents(){
+    public byte getCents() {
         return cents;
     }
-    
+
     /**
-     * Adding the Money object to the class
-     * 
+     * Adding the Money object to another
+     *
      * @param other The Money value we want to add
      * @return The Money value
      */
-    public Money add(Money other){
-        return other;
+    public Money add(Money other) {
+        Money currMoney = new Money(dollars, cents);
+        currMoney.dollars += other.getDollars();
+        currMoney.cents = (byte) (currMoney.cents + other.getCents());
+        currMoney.dollars += (currMoney.cents / 100);
+        currMoney.cents = (byte) (currMoney.cents % 100);
+        return currMoney;
     }
-    
+
     /**
      * Subtracting the Money object from the class
-     * 
+     *
      * @param other The Money value we want to subtract
      * @return The Money value
      */
-    public Money subtract(Money other){
-        return other;
+    public Money subtract(Money other) {
+        Money currMoney = new Money(dollars, cents);
+        currMoney.dollars -= other.getDollars();
+        currMoney.cents = (byte) (currMoney.cents - other.getCents());
+        currMoney.dollars += (currMoney.cents / 100);
+        currMoney.cents = (byte) (currMoney.cents % 100);
+        return currMoney;
     }
 
     /**
      * Overriding the toString method
-     * 
+     *
      * @return The string we want for output
      */
     @Override
     public String toString() {
-        return "Here is the value of dollars in Money = " 
-                + dollars + " Here is the value of cents in Money = " 
-                + cents;
+        return "$" + dollars + "." + cents;
     }
-    
-    
-    
-    
+
+    /**
+     * This will make a deep copy of the array
+     *
+     * @return Copiable value of money
+     */
+    @Override
+    public Money deepCopy() {
+        Money copy = new Money(this.dollars, this.cents);
+        return copy;
+    }
+
+    /**
+     * This will compare all values within the class
+     *
+     * @param other Money object
+     * @return whether it is less than, equal or greater than each other
+     */
+    @Override
+    public int compareTo(Money other) {
+        int compare = 0;
+        //compare real
+        compare = Long.compare(this.dollars, other.dollars);
+        if (compare != 0) {
+            return compare;
+        }
+        //compare imaginary
+        compare = Byte.compare(this.cents, other.cents);
+        if (compare != 0) {
+            return compare;
+        }
+        return compare;
+    }
+
 }

@@ -1,12 +1,13 @@
 package numberlist.primitivelist;
 
-
 /**
+ * This default class hold an array of long value for the class which consists
+ * methods that is similar to an array-list
  *
  * @author Phuc Hong Le
  * @version 1 (01/17/2017)
  */
-public class NumberArrayList {
+class NumberArrayList {
 
     //fields
     private long[] list;
@@ -14,85 +15,133 @@ public class NumberArrayList {
 
     //default constructor 
     /**
-     * 
+     * This is the default constructor
      */
     public NumberArrayList() {
-    }
-
-    //complete constructor
-    /**
-     * 
-     * @param list
-     * @param count 
-     */
-    public NumberArrayList(long[] list, int count) {
-        this.list = list;
-        this.count = count;
+        list = new long[count];
+        count = 0;
     }
 
     //methods
     /**
-     * 
-     * @param index
-     * @param value 
+     * This method will add the value into desired location in the array
+     *
+     * @param index the location in the array
+     * @param value the long value
      */
     public void add(int index, long value) {
-        
-    }
-
-    /**
-     * 
-     * @param index 
-     */
-    public void removeAt(int index) {
-        for (int i = 0; i < list.length; i++) {
-            if (index == list[i]) {
-                
+        //when the element is equal with the array's length, double the array
+        if (index > count) {
+            return;
+        } else if (index <= count) {
+            //when the element is equal with the array's length, double the array
+            if (count == list.length || index == list.length - 1) {
+                long[] listDouble;
+                int firstArrayLimit = list.length + 1;
+                listDouble = new long[firstArrayLimit];
+                for (int i = 0; i < list.length; i++) {
+                    listDouble[i] = list[i];
+                }
+                list = listDouble;
             }
+            //find and put the value at the specific index
+            if (index == count) {
+                list[index] = value;
+                count++;
+            } else if (index < count) {
+                for (int i = list.length - 1; i > index; i--) {
+                    list[i] = list[i - 1];
+                }
+                list[index] = value;
+                count++;
+            }
+
         }
     }
 
     /**
-     * 
-     * @param value 
+     * Removing the value in the array at it's index
+     *
+     * @param index the index of the value to be deleted
+     */
+    public void removeAt(int index) {
+        long[] listShrink;
+        boolean check = false;
+        try {
+            //move the array element over the index to be removed
+            if (index == 0 && list.length == 1) {
+                listShrink = new long[list.length - 1];
+                list = listShrink;
+            } else if (index < list.length && index != -1) {
+                listShrink = new long[list.length - 1];
+                for (int i = 0; i < list.length - 1; i++) {
+                    if (i != index) {
+                        listShrink[i] = list[i];
+                    } else {
+                        listShrink[i] = list[i + 1];
+                        check = true;
+                        break;
+                    }
+                }
+                if (check == true) {
+                    for (int i = listShrink.length - 1; i > index; i--) {
+                        listShrink[i] = list[i - 1];
+                    }
+                }
+                list = listShrink;
+            }
+        } catch (IndexOutOfBoundsException i) {
+            System.out.println("Your input is out of bound");
+        }
+    }
+
+    /**
+     * Removing the value in the array
+     *
+     * @param value the value to be deleted
      */
     public void remove(long value) {
-        for (int i = 0; i < 10; i++) {
-            if (value == list[i]) {
-                
-            }
-   
+        try {
+            int index = find(value);
+            removeAt(index);
+        } catch (IndexOutOfBoundsException i) {
+            System.out.println("Your input is out of bound");
         }
     }
 
     /**
      * Getting the value within the ArrayList
-     * 
-     * @param index
-     * @return 
+     *
+     * @param index the index of the value
+     * @return the element of that index in the array
      */
     public long get(int index) {
-        return list[index];
+        try {
+            return list[index];
+        } catch (IndexOutOfBoundsException i) {
+            return Long.MIN_VALUE;
+        }
     }
 
     /**
      * Finding the index within the ArrayList
-     * 
-     * @param value
-     * @return 
+     *
+     * @param value the value we want to find in the array
+     * @return the index of that current value
      */
     public int find(long value) {
-        for (int i = 0; i < list.length; i++) {
+        int index = -1;
+        for (int i = 0; i < list.length && index < 0; i++) {
             if (value == list[i]) {
-                return i;
+                index = i;
             }
         }
-        return -1;
+        return index;
     }
 
     /**
      * Getting the size of the ArrayList
-     * 
+     *
      * @return the size of the ArrayList
      */
     public int size() {
@@ -100,13 +149,21 @@ public class NumberArrayList {
     }
 
     /**
-     * Overriding the toString method
-     * 
-     * @return the string line we want toString to be
+     * Overriding the toString method [ 1, 2, 1 ]
+     *
+     * @return The string line we want to return
      */
     @Override
     public String toString() {
-        return "NumberArrayList{" + "list=" + list + ", count=" + count + '}';
+        String stringOutPut = "";
+        for (int b = 0; b < this.size(); b++) {
+            if (b == this.size() - 1) {
+                stringOutPut += this.get(b);
+            } else {
+                stringOutPut += this.get(b) + ", ";
+            }
+        }
+        return "[ " + stringOutPut + " ]";
     }
 
 }
