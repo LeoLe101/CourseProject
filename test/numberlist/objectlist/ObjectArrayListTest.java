@@ -1,5 +1,6 @@
 package numberlist.objectlist;
 
+import numberlist.InvalidIndexException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -21,7 +22,7 @@ public class ObjectArrayListTest {
     Object obj1;
     Object obj2;
     ObjectArrayList instance;
-    
+
     //default constructor of Test class
     public ObjectArrayListTest() {
     }
@@ -45,7 +46,8 @@ public class ObjectArrayListTest {
      * Test of add method, of class ObjectArrayList.
      */
     @Test
-    public void testAdd() {
+    public void testAdd()
+            throws InvalidIndexException, UncopiableException {
         instance.add(index1, obj1);
         instance.add(index2, obj2);
         for (int i = 0; i < instance.size() - 1; i++) {
@@ -61,7 +63,8 @@ public class ObjectArrayListTest {
      * Test of removeAt method, of class ObjectArrayList.
      */
     @Test
-    public void testRemoveAt() {
+    public void testRemoveAt()
+            throws InvalidIndexException, UncopiableException {
         instance.add(index1, obj1);
         instance.add(index2, obj2);
         instance.removeAt(index2);
@@ -79,7 +82,8 @@ public class ObjectArrayListTest {
      * Test of remove method, of class ObjectArrayList.
      */
     @Test
-    public void testRemove() {
+    public void testRemove()
+            throws InvalidIndexException, UncopiableException {
         instance.add(index1, obj1);
         instance.add(index2, obj2);
         instance.remove(obj2);
@@ -96,7 +100,8 @@ public class ObjectArrayListTest {
      * Test of get method, of class ObjectArrayList.
      */
     @Test
-    public void testGet() {
+    public void testGet()
+            throws InvalidIndexException, UncopiableException {
         instance.add(index1, obj1);
         instance.add(index2, obj2);
         instance.get(index2);
@@ -113,7 +118,8 @@ public class ObjectArrayListTest {
      * Test of find method, of class ObjectArrayList.
      */
     @Test
-    public void testFind() {
+    public void testFind()
+            throws InvalidIndexException, UncopiableException {
         instance.add(index1, obj1);
         instance.add(index2, obj2);
         for (int i = 0; i < instance.size() - 1; i++) {
@@ -129,7 +135,8 @@ public class ObjectArrayListTest {
      * Test of size method, of class ObjectArrayList.
      */
     @Test
-    public void testSize() {
+    public void testSize()
+            throws InvalidIndexException, UncopiableException {
         int sizeArray = 10;
         instance.add(index1, obj1);
         instance.add(index2, obj2);
@@ -142,8 +149,10 @@ public class ObjectArrayListTest {
      * Test of toString method, of class ObjectArrayList.
      */
     @Test
-    public void testToString() {
-        String expResult = "This is the list of Object Array List";
+    public void testToString()
+            throws InvalidIndexException, UncopiableException {
+        instance.add(index1, obj1);
+        String expResult = "[ " + "5 + 6i" + " ]";
         String result = instance.toString();
         assertEquals(expResult, result);
         System.out.println("toString method PASSED!!!");

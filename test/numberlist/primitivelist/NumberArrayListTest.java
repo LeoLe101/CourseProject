@@ -1,5 +1,6 @@
 package numberlist.primitivelist;
 
+import numberlist.InvalidIndexException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -48,7 +49,8 @@ public class NumberArrayListTest {
      * Test of add method, of class NumberArrayList.
      */
     @Test
-    public void testAdd() {
+    public void testAdd()
+            throws InvalidIndexException {
         instance.add(index1, long1);
         instance.add(index2, long2);
         for (int i = 0; i < instance.size() - 1; i++) {
@@ -64,7 +66,8 @@ public class NumberArrayListTest {
      * Test of removeAt method, of class NumberArrayList.
      */
     @Test
-    public void testRemoveAt() {
+    public void testRemoveAt()
+            throws InvalidIndexException {
         instance.add(index1, long1);
         instance.add(index2, long2);
         instance.removeAt(index2);
@@ -81,7 +84,8 @@ public class NumberArrayListTest {
      * Test of remove method, of class NumberArrayList.
      */
     @Test
-    public void testRemove() {
+    public void testRemove()
+            throws InvalidIndexException {
         instance.add(index1, long1);
         instance.add(index2, long2);
         instance.remove(long2);
@@ -98,7 +102,8 @@ public class NumberArrayListTest {
      * Test of get method, of class NumberArrayList.
      */
     @Test
-    public void testGet() {
+    public void testGet()
+            throws InvalidIndexException {
         instance.add(index1, long1);
         instance.add(index2, long2);
         instance.get(index2);
@@ -115,7 +120,8 @@ public class NumberArrayListTest {
      * Test of find method, of class NumberArrayList.
      */
     @Test
-    public void testFind() {
+    public void testFind()
+            throws InvalidIndexException {
         instance.add(index1, long1);
         instance.add(index2, long2);
         for (int i = 0; i < instance.size() - 1; i++) {
@@ -131,7 +137,8 @@ public class NumberArrayListTest {
      * Test of size method, of class NumberArrayList.
      */
     @Test
-    public void testSize() {
+    public void testSize()
+            throws InvalidIndexException {
         int sizeArray = 10;
         instance.add(index1, long1);
         instance.add(index2, long2);
@@ -144,8 +151,10 @@ public class NumberArrayListTest {
      * Test of toString method, of class NumberArrayList.
      */
     @Test
-    public void testToString() {
-        String testResult = "This is the list of Number Array List";
+    public void testToString()
+            throws InvalidIndexException {
+        instance.add(index1, long1);
+        String testResult = "[ " + "9" + " ]";
         String result = instance.toString();
         assertTrue(testResult.equalsIgnoreCase(result));
         System.out.println("toString method PASSED!!!");

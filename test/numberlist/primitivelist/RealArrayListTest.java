@@ -1,5 +1,6 @@
 package numberlist.primitivelist;
 
+import numberlist.InvalidIndexException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -28,7 +29,8 @@ public class RealArrayListTest {
      * Setting up data for the J-Unit test
      */
     @Before
-    public void setUp() {
+    public void setUp()
+            throws InvalidIndexException {
         value = 25;
         falseValue = 12;
         instance = new RealArrayList();
@@ -48,7 +50,8 @@ public class RealArrayListTest {
      * Test of add method, of class RealArrayList.
      */
     @Test
-    public void testAdd() {
+    public void testAdd()
+            throws InvalidIndexException {
         instance.add(value);
         for (int i = 0; i < instance.size() - 1; i++) {
             assertTrue(instance.get(9) == value);
@@ -61,7 +64,8 @@ public class RealArrayListTest {
      * Test of findLast method, of class RealArrayList.
      */
     @Test
-    public void testFindLast() {
+    public void testFindLast()
+            throws InvalidIndexException {
         int expResult = 4;
         int falsResult = 2;
         int result = instance.findLast(value);

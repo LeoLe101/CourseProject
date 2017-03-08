@@ -1,5 +1,6 @@
 package numberlist.objectlist;
 
+import numberlist.InvalidIndexException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -50,7 +51,8 @@ public class ObjectLinkedListTest {
      * Test of add method, of class ObjectLinkedList.
      */
     @Test
-    public void testAdd() {
+    public void testAdd() 
+            throws InvalidIndexException, UncopiableException{
         instance.add(index1, obj);
         instance.add(index2, obj2);
         assertTrue(instance.get(index1) == obj);
@@ -64,7 +66,8 @@ public class ObjectLinkedListTest {
      * Test of removeAt method, of class ObjectLinkedList.
      */
     @Test
-    public void testRemoveAt() {
+    public void testRemoveAt() 
+            throws InvalidIndexException, UncopiableException{
         instance.add(index1, obj);
         instance.add(index2, obj2);
         instance.add(index3, obj);
@@ -81,7 +84,8 @@ public class ObjectLinkedListTest {
      * Test of remove method, of class ObjectLinkedList.
      */
     @Test
-    public void testRemove() {
+    public void testRemove() 
+            throws InvalidIndexException, UncopiableException{
         instance.add(index1, obj);
         instance.add(index2, obj2);
         instance.add(index3, obj);
@@ -98,7 +102,8 @@ public class ObjectLinkedListTest {
      * Test of get method, of class ObjectLinkedList.
      */
     @Test
-    public void testGet() {
+    public void testGet() 
+            throws InvalidIndexException, UncopiableException{
         instance.add(index1, obj);
         instance.add(index2, obj2);
         assertTrue(instance.get(index1) == obj);
@@ -112,7 +117,8 @@ public class ObjectLinkedListTest {
      * Test of find method, of class ObjectLinkedList.
      */
     @Test
-    public void testFind() {
+    public void testFind() 
+            throws InvalidIndexException, UncopiableException{
         instance.add(index1, obj);
         instance.add(index2, obj2);
         assertTrue(index1 == instance.find(obj));
@@ -126,8 +132,10 @@ public class ObjectLinkedListTest {
      * Test of toString method, of class ObjectLinkedList.
      */
     @Test
-    public void testToString() {
-        String expResult = "This is the ObjectLinkedList string";
+    public void testToString() 
+            throws InvalidIndexException, UncopiableException{
+        instance.add(index1, obj);
+        String expResult = "[ " + "5 + 6i" + " ]";
         String result = instance.toString();
         assertEquals(expResult, result);
         System.out.println("toString method PASSED!!!");
@@ -137,7 +145,8 @@ public class ObjectLinkedListTest {
      * Test of deepCopy method, of class ObjectLinkedList.
      */
     @Test
-    public void testDeepCopy() {
+    public void testDeepCopy() 
+            throws InvalidIndexException, UncopiableException{
         instance.add(index1, obj);
         instance.add(index2, obj2);       
         assertTrue(instance == instance.deepCopy());

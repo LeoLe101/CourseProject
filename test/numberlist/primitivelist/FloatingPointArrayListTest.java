@@ -1,5 +1,6 @@
 package numberlist.primitivelist;
 
+import numberlist.InvalidIndexException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
  * @version 1 (02/01/2017)
  */
 public class FloatingPointArrayListTest {
-    
+
     //fields
     int index;
     int index1;
@@ -45,7 +46,8 @@ public class FloatingPointArrayListTest {
      * Test of add method, of class NumberArrayList.
      */
     @Test
-    public void testAdd() {
+    public void testAdd()
+            throws InvalidIndexException {
         instance.add(index1, double1);
         instance.add(index2, double2);
         for (int i = 0; i < instance.size() - 1; i++) {
@@ -61,7 +63,8 @@ public class FloatingPointArrayListTest {
      * Test of removeAt method, of class NumberArrayList.
      */
     @Test
-    public void testRemoveAt() {
+    public void testRemoveAt()
+            throws InvalidIndexException {
         instance.add(index1, double1);
         instance.add(index2, double2);
         instance.removeAt(index2);
@@ -78,7 +81,8 @@ public class FloatingPointArrayListTest {
      * Test of remove method, of class NumberArrayList.
      */
     @Test
-    public void testRemove() {
+    public void testRemove()
+            throws InvalidIndexException {
         instance.add(index1, double1);
         instance.add(index2, double2);
         instance.remove(double2);
@@ -95,7 +99,8 @@ public class FloatingPointArrayListTest {
      * Test of get method, of class NumberArrayList.
      */
     @Test
-    public void testGet() {
+    public void testGet()
+            throws InvalidIndexException {
         instance.add(index1, double1);
         instance.add(index2, double2);
         instance.get(index2);
@@ -112,7 +117,8 @@ public class FloatingPointArrayListTest {
      * Test of find method, of class NumberArrayList.
      */
     @Test
-    public void testFind() {
+    public void testFind()
+            throws InvalidIndexException {
         instance.add(index1, double1);
         instance.add(index2, double2);
         for (int i = 0; i < instance.size() - 1; i++) {
@@ -128,7 +134,8 @@ public class FloatingPointArrayListTest {
      * Test of size method, of class NumberArrayList.
      */
     @Test
-    public void testSize() {
+    public void testSize()
+            throws InvalidIndexException {
         int sizeArray = 10;
         instance.add(index1, double1);
         instance.add(index2, double2);
@@ -141,8 +148,10 @@ public class FloatingPointArrayListTest {
      * Test of toString method, of class NumberArrayList.
      */
     @Test
-    public void testToString() {
-        String testResult = "This is the list of Floating Point Array List";
+    public void testToString()
+            throws InvalidIndexException {
+        instance.add(index1, double1);
+        String testResult = "[ " + "89" + " ]";
         String result = instance.toString();
         assertTrue(testResult.equalsIgnoreCase(result));
         System.out.println("toString method PASSED!!!");
