@@ -1,5 +1,9 @@
 package numberlist.primitivelist;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import numberlist.InvalidIndexException;
+
 /**
  * This default class represent an array-list of number from the project It will
  * use composition to create a floating point version of the NumberArrayList
@@ -10,7 +14,7 @@ package numberlist.primitivelist;
 class FloatingPointArrayList {
 
     //fields
-    private NumberArrayList list;
+    private final NumberArrayList list;
 
     //default constructor
     /**
@@ -28,7 +32,8 @@ class FloatingPointArrayList {
      * @param index The index of the array
      * @param value The value to add
      */
-    public void add(int index, double value) {
+    public void add(int index, double value) 
+            throws InvalidIndexException{
         list.add(index, Double.doubleToRawLongBits(value));
     }
 
@@ -38,7 +43,8 @@ class FloatingPointArrayList {
      *
      * @param index the index of the value to be deleted
      */
-    public void removeAt(int index) {
+    public void removeAt(int index) 
+            throws InvalidIndexException{
         list.removeAt(index);
     }
 
@@ -48,7 +54,8 @@ class FloatingPointArrayList {
      *
      * @param value The value we want to remove
      */
-    public void remove(double value) {
+    public void remove(double value) 
+            throws InvalidIndexException{
         list.remove(Double.doubleToRawLongBits(value));
     }
 
@@ -59,7 +66,8 @@ class FloatingPointArrayList {
      * @param index The index of the array
      * @return The value from the array
      */
-    public double get(int index) {
+    public double get(int index) 
+            throws InvalidIndexException{
         return Double.longBitsToDouble(list.get(index));
     }
 
@@ -89,15 +97,18 @@ class FloatingPointArrayList {
      */
     @Override
     public String toString() {
-         String stringOutPut = "";
-        for (int b = 0; b < this.size(); b++) {
-            if (b == this.size() - 1) {
-                stringOutPut += this.get(b);
-            } else {
-                stringOutPut += this.get(b) + ", ";
+        String output = "";
+        for (int i = 0; i < list.size(); i++) {
+            try {
+                output += Double.longBitsToDouble(list.get(i)) + ", ";
+            } catch (InvalidIndexException iie) {
+                System.out.println(iie.getMessage());
+                System.out.println("THE INDEX ONLY VALID FROM " 
+                        + iie.getLowestIndex() + " TO " + iie.getHighestIndex());
             }
         }
-        return "[ " + stringOutPut + " ]";
+        output = output.substring(0, output.length() - 2);
+        return "[ " + output + " ]";
     }
 
 }

@@ -12,11 +12,11 @@ import javafx.application.Application;
 public class Launcher {
 
     /**
-     * This is the main class where the project runs
+     * Launcher for the GUI
      *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Application.launch(CourseProject.class);
+        Application.launch(GunDealerGUI.class);
     }
 }

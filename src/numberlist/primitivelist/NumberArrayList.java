@@ -1,5 +1,8 @@
 package numberlist.primitivelist;
 
+import numberlist.InvalidIndexException;
+import numberlist.objectlist.UncopiableException;
+
 /**
  * This default class hold an array of long value for the class which consists
  * methods that is similar to an array-list
@@ -18,7 +21,7 @@ class NumberArrayList {
      * This is the default constructor
      */
     public NumberArrayList() {
-        list = new long[count];
+        list = new long[10];
         count = 0;
     }
 
@@ -29,19 +32,16 @@ class NumberArrayList {
      * @param index the location in the array
      * @param value the long value
      */
-    public void add(int index, long value) {
-        //when the element is equal with the array's length, double the array
-        if (index > count) {
-            return;
+    public void add(int index, long value)
+            throws InvalidIndexException {
+        //catch if the index is valid or not
+        if (index > count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
         } else if (index <= count) {
             //when the element is equal with the array's length, double the array
-            if (count == list.length || index == list.length - 1) {
-                long[] listDouble;
-                int firstArrayLimit = list.length + 1;
-                listDouble = new long[firstArrayLimit];
-                for (int i = 0; i < list.length; i++) {
-                    listDouble[i] = list[i];
-                }
+            if (count == list.length) {
+                long[] listDouble = new long[list.length * 2];
+                System.arraycopy(list, 0, listDouble, 0, list.length);
                 list = listDouble;
             }
             //find and put the value at the specific index
@@ -49,8 +49,8 @@ class NumberArrayList {
                 list[index] = value;
                 count++;
             } else if (index < count) {
-                for (int i = list.length - 1; i > index; i--) {
-                    list[i] = list[i - 1];
+                for (int i = count - 1; i > index; i--) {
+                    list[i + 1] = list[i];
                 }
                 list[index] = value;
                 count++;
@@ -64,35 +64,15 @@ class NumberArrayList {
      *
      * @param index the index of the value to be deleted
      */
-    public void removeAt(int index) {
-        long[] listShrink;
-        boolean check = false;
-        try {
-            //move the array element over the index to be removed
-            if (index == 0 && list.length == 1) {
-                listShrink = new long[list.length - 1];
-                list = listShrink;
-            } else if (index < list.length && index != -1) {
-                listShrink = new long[list.length - 1];
-                for (int i = 0; i < list.length - 1; i++) {
-                    if (i != index) {
-                        listShrink[i] = list[i];
-                    } else {
-                        listShrink[i] = list[i + 1];
-                        check = true;
-                        break;
-                    }
-                }
-                if (check == true) {
-                    for (int i = listShrink.length - 1; i > index; i--) {
-                        listShrink[i] = list[i - 1];
-                    }
-                }
-                list = listShrink;
-            }
-        } catch (IndexOutOfBoundsException i) {
-            System.out.println("Your input is out of bound");
+    public void removeAt(int index)
+            throws InvalidIndexException {
+        if (index >= count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
         }
+        for (int i = index + 1; i < count; i++) {
+            list[i - 1] = list[i];
+        }
+        count--;
     }
 
     /**
@@ -100,13 +80,10 @@ class NumberArrayList {
      *
      * @param value the value to be deleted
      */
-    public void remove(long value) {
-        try {
-            int index = find(value);
-            removeAt(index);
-        } catch (IndexOutOfBoundsException i) {
-            System.out.println("Your input is out of bound");
-        }
+    public void remove(long value)
+            throws InvalidIndexException {
+        int index = find(value);
+        removeAt(index);
     }
 
     /**
@@ -115,12 +92,12 @@ class NumberArrayList {
      * @param index the index of the value
      * @return the element of that index in the array
      */
-    public long get(int index) {
-        try {
-            return list[index];
-        } catch (IndexOutOfBoundsException i) {
-            return Long.MIN_VALUE;
+    public long get(int index)
+            throws InvalidIndexException {
+        if (index >= count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
         }
+        return list[index];
     }
 
     /**
@@ -145,7 +122,7 @@ class NumberArrayList {
      * @return the size of the ArrayList
      */
     public int size() {
-        return list.length;
+        return count;
     }
 
     /**
@@ -156,13 +133,10 @@ class NumberArrayList {
     @Override
     public String toString() {
         String stringOutPut = "";
-        for (int b = 0; b < this.size(); b++) {
-            if (b == this.size() - 1) {
-                stringOutPut += this.get(b);
-            } else {
-                stringOutPut += this.get(b) + ", ";
-            }
+        for (int i = 0; i < count; i++) {
+            stringOutPut += list[i] + ", ";
         }
+        stringOutPut = stringOutPut.substring(0, stringOutPut.length() - 2);
         return "[ " + stringOutPut + " ]";
     }
 

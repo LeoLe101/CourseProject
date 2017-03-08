@@ -1,5 +1,7 @@
 package numberlist.objectlist;
 
+import numberlist.InvalidIndexException;
+
 /**
  * This abstract class holds a list of object that can be accessed within this
  * package
@@ -19,21 +21,24 @@ abstract class ObjectList {
      * @param index the index of that object
      * @param obj the object value
      */
-    abstract void add(int index, Object obj);
+    abstract void add(int index, Object obj) 
+            throws InvalidIndexException, UncopiableException;
 
     /**
      * Abstract class of removing the object at it's index
      *
      * @param index the index of that object
      */
-    abstract void removeAt(int index);
+    abstract void removeAt(int index) 
+            throws InvalidIndexException;
 
     /**
      * Abstract class of removing the object
      *
      * @param obj the object to be removed
      */
-    abstract void remove(Object obj);
+    abstract void remove(Object obj) 
+            throws InvalidIndexException;
 
     /**
      * Abstract class of getting the object from it's index
@@ -41,7 +46,8 @@ abstract class ObjectList {
      * @param index the index of that specific object
      * @return the object
      */
-    abstract Object get(int index);
+    abstract Object get(int index) 
+            throws InvalidIndexException;
 
     /**
      * Abstract class of finding the object and return the index

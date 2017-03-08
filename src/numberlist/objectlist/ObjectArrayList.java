@@ -1,6 +1,7 @@
 package numberlist.objectlist;
 
 import java.util.Arrays;
+import numberlist.InvalidIndexException;
 
 /**
  * This class hold an array of Object value for the class which consists methods
@@ -21,7 +22,7 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      */
     public ObjectArrayList() {
         count = 0;
-        list = new Object[count];
+        list = new Object[10];
     }
 
     //methods
@@ -32,10 +33,16 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      * @param obj The object value we want to add
      */
     @Override
-    public void add(int index, Object obj) {
+    public void add(int index, Object obj)
+            throws InvalidIndexException, UncopiableException {
+        try {
+            Copiable copy = (Copiable) obj;
+        } catch (Exception e) {
+            throw new UncopiableException();
+        }
         //cases prevent the index to go out of bound
-        if (index > count) {
-            return;
+        if (index > count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
         } else if (index <= count) {
             //when the element is equal with the array's length, double the array
             if (count == list.length) {
@@ -58,7 +65,6 @@ public class ObjectArrayList extends ObjectList implements Copiable {
                 list[index] = obj;
                 count++;
             }
-
         }
     }
 
@@ -68,28 +74,15 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      * @param index The index of the object we want to delete
      */
     @Override
-    public void removeAt(int index) {
-        Object[] listShrink;
-        Object[] listLimit;
-        try {
-            //move the array element over the index to be removed
-            if (index == 0 && list.length == 1) {
-                for (int i = index; i < list.length; i++) {
-                    list[i] = null;
-                }
-                listShrink = new Object[list.length - 1];
-                list = listShrink;
-            } else if (index > 0 && list.length > 1) {
-                listShrink = new Object[list.length - 1];
-                for (int i = index; i < list.length; i++) {
-                    listShrink[i - 1] = list[i - 1];
-                }
-                list = listShrink;
-            }
-        } catch (IndexOutOfBoundsException i) {
-            System.out.println("Your input is out of bound");
+    public void removeAt(int index) throws InvalidIndexException {
+        //move the array element over the index to be removed
+        if (index >= count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
         }
-
+        for (int i = index + 1; i < count; i++) {
+            list[i - 1] = list[i];
+        }
+        count--;
     }
 
     /**
@@ -98,13 +91,12 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      * @param obj the value to be deleted
      */
     @Override
-    public void remove(Object obj
-    ) {
+    public void remove(Object obj) throws InvalidIndexException {
         try {
             int index = find(obj);
             removeAt(index);
         } catch (IndexOutOfBoundsException i) {
-            System.out.println("Your input is out of bound");
+            throw new InvalidIndexException(0, count - 1);
         }
     }
 
@@ -115,13 +107,11 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      * @return The object value inside the array
      */
     @Override
-    public Object get(int index
-    ) {
-        try {
-            return list[index];
-        } catch (IndexOutOfBoundsException i) {
-            return Long.MIN_VALUE;
+    public Object get(int index) throws InvalidIndexException {
+        if (index >= count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
         }
+        return list[index];
     }
 
     /**
@@ -131,33 +121,14 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      * @return The index of that object in the array
      */
     @Override
-    public int find(Object obj
-    ) {
+    public int find(Object obj) {
         int index = -1;
-        if (list.length == 1) {
-            for (int i = 0; i < list.length && index < 0; i++) {
-                if (obj == list[i]) {
-                    index = i;
-                }
-            }
-        } else {
-            for (int i = 0; i < list.length - 1 && index < 0; i++) {
-                if (obj == list[i]) {
-                    index = i;
-                }
+        for (int i = 0; i < count && index < 0; i++) {
+            if (obj == list[i]) {
+                index = i;
             }
         }
         return index;
-    }
-
-    /**
-     * Getting the size of the array
-     *
-     * @return The size of the array
-     */
-    @Override
-    public int size() {
-        return list.length;
     }
 
     /**
@@ -167,16 +138,12 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      */
     @Override
     public String toString() {
-        String stringOutPut = "";
-
-        for (int b = 0; b < this.size(); b++) {
-            if (b == this.size() - 1) {
-                stringOutPut += this.get(b).toString();
-            } else {
-                stringOutPut += this.get(b).toString() + ", ";
-            }
+        String output = "";
+        for (int i = 0; i < count; i++) {
+            output += list[i] + ", ";
         }
-        return "[ " + stringOutPut + " ]";
+        output = output.substring(0, output.length() - 2);
+        return "[ " + output + " ]";
     }
 
     /**
@@ -185,7 +152,8 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      * @return Copiable value of the object array list
      */
     @Override
-    public ObjectArrayList deepCopy() {
+    public ObjectArrayList deepCopy()
+            throws InvalidIndexException, UncopiableException {
         ObjectArrayList copy = new ObjectArrayList();
         for (int i = 0; i < list.length; i++) {
             copy.add(i, ((Copiable) list[i]).deepCopy());

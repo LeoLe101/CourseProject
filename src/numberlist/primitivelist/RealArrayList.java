@@ -1,5 +1,7 @@
 package numberlist.primitivelist;
 
+import numberlist.InvalidIndexException;
+
 /**
  * This class holds an array-list of real object
  *
@@ -14,12 +16,9 @@ public class RealArrayList extends FloatingPointArrayList {
      *
      * @param value the value to be added
      */
-    public void add(double value) {
-        if (super.size() == 0) {
-            super.add(super.size(), value);
-        } else {
-            super.add(super.size() - 1, value);
-        }
+    public void add(double value)
+            throws InvalidIndexException {
+        super.add(super.size(), value);
     }
 
     /**
@@ -27,20 +26,12 @@ public class RealArrayList extends FloatingPointArrayList {
      *
      * @param value the value to be removed
      */
-    public void removeAll(double value) {
-        int numInstance = 0;
-        //find the number of instances of the value existing in the array
-        for (int i = 0; i < super.size(); i++) {
-            if (value == super.get(i)) {
-                numInstance++;
-            }
-            if (numInstance > 0) {
-                //delete until there are no instances of the value in the array
-                do {
-                    super.remove(value);
-                    numInstance--;
-                } while (numInstance > 0);
-            }
+    public void removeAll(double value) 
+            throws InvalidIndexException{
+        int index = find(value);
+        while (index >= 0) {
+            removeAt(index);
+            index = find(value);
         }
     }
 
@@ -50,10 +41,11 @@ public class RealArrayList extends FloatingPointArrayList {
      * @param value the value to be found
      * @return the last index of the value
      */
-    public int findLast(double value) {
+    public int findLast(double value)
+            throws InvalidIndexException {
         int index = -1;
-        //this loop will process until the last index of that value
-        for (int i = 0; i < super.size(); i++) {
+        //this loop will process from the last index to the first index
+        for (int i = super.size() - 1; i >= 0 && index < 0; i--) {
             if (value == super.get(i)) {
                 index = i;
             }

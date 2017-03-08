@@ -1,5 +1,7 @@
 package numberlist.objectlist;
 
+import numberlist.InvalidIndexException;
+
 /**
  * This class linked the list of object with their nodes
  *
@@ -16,6 +18,8 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
      * Default constructor
      */
     public ObjectLinkedList() {
+        firstNode = null;
+        count = 0;
     }
 
     //methods
@@ -26,10 +30,19 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
      * @param obj the object value
      */
     @Override
-    public void add(int index, Object obj) {
-        if (index > count) {
-            return;
+    public void add(int index, Object obj)
+            throws InvalidIndexException, UncopiableException {
+        //catch if the object is an instance of Copiable or not
+        try {
+            Copiable copy = (Copiable) obj;
+        } catch (Exception e) {
+            throw new UncopiableException();
         }
+        //catch if the index is valid or not
+        if (index > count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
+        }
+        //continue the process when every requirement passed
         Node newNode = new Node(obj);
         if (index == 0) {
             newNode.setNext(firstNode);
@@ -51,7 +64,11 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
      * @param index the index of that object
      */
     @Override
-    public void removeAt(int index) {
+    public void removeAt(int index) throws InvalidIndexException {
+        //catch if the index is valid or not
+        if (index > count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
+        }
         Node currentNode = firstNode;
         Node exNode = null;
         //search for the node at that specific index and add it into the current
@@ -68,7 +85,6 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
             //set the exNode back to null for the next remove
             exNode = null;
         }
-        
     }
 
     /**
@@ -77,12 +93,12 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
      * @param obj the object to be removed
      */
     @Override
-    public void remove(Object obj) {
+    public void remove(Object obj) throws InvalidIndexException {
         try {
             int index = find(obj);
             removeAt(index);
-        } catch (IndexOutOfBoundsException i) {
-            System.out.println("Your input is out of bound");
+        } catch (Exception e) {
+            throw new InvalidIndexException(0, count - 1);
         }
     }
 
@@ -93,9 +109,10 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
      * @return the object
      */
     @Override
-    public Object get(int index) {
-        if (index >= count) {
-            return null;
+    public Object get(int index) throws InvalidIndexException{
+        //catch if the index is valid or not
+        if (index > count || index < 0) {
+            throw new InvalidIndexException(0, count - 1);
         }
         if (index == 0) {
             return firstNode.getValue();
@@ -134,13 +151,12 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
     @Override
     public String toString() {
         String stringOutPut = "";
-        for (int b = 0; b < this.size(); b++) {
-            if (b == this.size() - 1) {
-                stringOutPut += this.get(b).toString();
-            } else {
-                stringOutPut += this.get(b).toString() + ", ";
-            }
+        Node currentNode = firstNode;
+        while (currentNode.getNext() != null) {
+            stringOutPut += currentNode.getValue() + ", ";
+            currentNode = currentNode.getNext();
         }
+        stringOutPut += currentNode.getValue();
         return "[ " + stringOutPut + " ]";
     }
 
@@ -150,7 +166,8 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
      * @return an Object Linked List value of the list
      */
     @Override
-    public ObjectLinkedList deepCopy() {
+    public ObjectLinkedList deepCopy()
+            throws InvalidIndexException, UncopiableException {
         Node currentNode = firstNode;
         ObjectLinkedList copyList = new ObjectLinkedList();
         for (int i = 0; i < size(); i++) {

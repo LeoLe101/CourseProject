@@ -9,14 +9,16 @@ package numberlist.objectlist;
 public final class Money implements Copiable, Comparable<Money> {
 
     //fields
-    private long dollars;
-    private byte cents;
+    private final long dollars;
+    private final byte cents;
 
     //default constuctor and complete constructor
     /**
      * This is the default constructor
      */
     public Money() {
+        dollars = 0;
+        cents = 0;
     }
 
     /**
@@ -26,8 +28,10 @@ public final class Money implements Copiable, Comparable<Money> {
      * @param cents The amount of cents
      */
     public Money(long dollars, byte cents) {
-        this.dollars = dollars;
-        this.cents = cents;
+        long value = dollars * 100;
+        value += cents;
+        this.dollars = value / 100;
+        this.cents = (byte) (value % 100);
     }
 
     //methods
@@ -56,12 +60,12 @@ public final class Money implements Copiable, Comparable<Money> {
      * @return The Money value
      */
     public Money add(Money other) {
-        Money currMoney = new Money(dollars, cents);
-        currMoney.dollars += other.getDollars();
-        currMoney.cents = (byte) (currMoney.cents + other.getCents());
-        currMoney.dollars += (currMoney.cents / 100);
-        currMoney.cents = (byte) (currMoney.cents % 100);
-        return currMoney;
+        long currMoneytotal = dollars * 100;
+        currMoneytotal += cents;
+        long otherMoneyTotal = other.dollars * 100;
+        otherMoneyTotal += other.cents;
+        long result = currMoneytotal + otherMoneyTotal;
+        return new Money(result / 100, (byte) (result % 100));
     }
 
     /**
@@ -71,12 +75,12 @@ public final class Money implements Copiable, Comparable<Money> {
      * @return The Money value
      */
     public Money subtract(Money other) {
-        Money currMoney = new Money(dollars, cents);
-        currMoney.dollars -= other.getDollars();
-        currMoney.cents = (byte) (currMoney.cents - other.getCents());
-        currMoney.dollars += (currMoney.cents / 100);
-        currMoney.cents = (byte) (currMoney.cents % 100);
-        return currMoney;
+        long currMoneytotal = dollars * 100;
+        currMoneytotal += cents;
+        long otherMoneyTotal = other.dollars * 100;
+        otherMoneyTotal += other.cents;
+        long result = currMoneytotal - otherMoneyTotal;
+        return new Money(result / 100, (byte) (result % 100));
     }
 
     /**

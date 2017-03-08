@@ -9,14 +9,16 @@ package numberlist.objectlist;
 public final class Complex implements Copiable, Comparable<Complex> {
 
     //fields
-    private double real;
-    private double imaginary;
+    private final double real;
+    private final double imaginary;
 
     //default constructor and complete constructor
     /**
      * This is the default constructor
      */
     public Complex() {
+        real = 0;
+        imaginary = 0;
     }
 
     /**
@@ -56,10 +58,9 @@ public final class Complex implements Copiable, Comparable<Complex> {
      * @return The Complex value
      */
     public Complex add(Complex other) {
-        Complex currComplex = new Complex(real, imaginary);
-        currComplex.real += other.getReal();
-        currComplex.imaginary = currComplex.imaginary + other.getImaginary();
-        return currComplex;
+        double realNumber = this.real + other.real;
+        double imaginaryNumber = this.imaginary + other.imaginary;
+        return new Complex(realNumber, imaginaryNumber);
     }
 
     /**
@@ -69,10 +70,9 @@ public final class Complex implements Copiable, Comparable<Complex> {
      * @return The Complex value
      */
     public Complex subtract(Complex other) {
-        Complex currComplex = new Complex(real, imaginary);
-        currComplex.real -= other.getReal();
-        currComplex.imaginary = currComplex.imaginary - other.getImaginary();
-        return currComplex;
+        double realNumber = this.real - other.real;
+        double imaginaryNumber = this.imaginary - other.imaginary;
+        return new Complex(realNumber, imaginaryNumber);
     }
 
     /**
@@ -82,6 +82,15 @@ public final class Complex implements Copiable, Comparable<Complex> {
      */
     @Override
     public String toString() {
+        if (imaginary == 0) {
+            return real + "";
+        }
+        if (real == 0) {
+            return imaginary + "i";
+        }
+        if (imaginary < 0) {
+            return real + " - " + (-imaginary) + "i";
+        }
         return real + " + " + imaginary + 'i';
     }
 
@@ -92,7 +101,7 @@ public final class Complex implements Copiable, Comparable<Complex> {
      */
     @Override
     public Complex deepCopy() {
-        Complex copy = new Complex(this.real, this.imaginary);
+        Complex copy = new Complex(real, imaginary);
         return copy;
     }
 

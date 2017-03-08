@@ -1,5 +1,7 @@
 package numberlist.objectlist;
 
+import numberlist.InvalidIndexException;
+
 /**
  * This interface class helps implements deepCopy 
  * method to other concrete classes
@@ -9,5 +11,6 @@ package numberlist.objectlist;
  */
 public interface Copiable {
     
-    public Copiable deepCopy();
+    public Copiable deepCopy() 
+            throws InvalidIndexException, UncopiableException;
 }
