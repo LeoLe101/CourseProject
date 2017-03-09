@@ -36,7 +36,7 @@ class NumberArrayList {
             throws InvalidIndexException {
         //catch if the index is valid or not
         if (index > count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         } else if (index <= count) {
             //when the element is equal with the array's length, double the array
             if (count == list.length) {
@@ -67,7 +67,7 @@ class NumberArrayList {
     public void removeAt(int index)
             throws InvalidIndexException {
         if (index >= count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         }
         for (int i = index + 1; i < count; i++) {
             list[i - 1] = list[i];
@@ -95,7 +95,7 @@ class NumberArrayList {
     public long get(int index)
             throws InvalidIndexException {
         if (index >= count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         }
         return list[index];
     }

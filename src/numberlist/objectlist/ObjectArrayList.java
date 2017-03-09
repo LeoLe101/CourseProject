@@ -42,7 +42,7 @@ public class ObjectArrayList extends ObjectList implements Copiable {
         }
         //cases prevent the index to go out of bound
         if (index > count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         } else if (index <= count) {
             //when the element is equal with the array's length, double the array
             if (count == list.length) {
@@ -77,7 +77,7 @@ public class ObjectArrayList extends ObjectList implements Copiable {
     public void removeAt(int index) throws InvalidIndexException {
         //move the array element over the index to be removed
         if (index >= count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         }
         for (int i = index + 1; i < count; i++) {
             list[i - 1] = list[i];
@@ -92,12 +92,8 @@ public class ObjectArrayList extends ObjectList implements Copiable {
      */
     @Override
     public void remove(Object obj) throws InvalidIndexException {
-        try {
             int index = find(obj);
             removeAt(index);
-        } catch (IndexOutOfBoundsException i) {
-            throw new InvalidIndexException(0, count - 1);
-        }
     }
 
     /**
@@ -109,7 +105,7 @@ public class ObjectArrayList extends ObjectList implements Copiable {
     @Override
     public Object get(int index) throws InvalidIndexException {
         if (index >= count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         }
         return list[index];
     }

@@ -12,6 +12,7 @@ public class InvalidIndexException extends Exception {
     //fields
     private int lowestIndex;
     private int highestIndex;
+    private int sentValue;
 
     /**
      * This is the complete constructor of the exception
@@ -19,10 +20,13 @@ public class InvalidIndexException extends Exception {
      * @param lowestIndex the lowest index that the index can be
      * @param highestIndex the highest index that the index can be
      */
-    public InvalidIndexException(int lowestIndex, int highestIndex) {
-        super("THE INDEX ONLY VALID FROM " + lowestIndex + " TO " + highestIndex);
+    public InvalidIndexException(int lowestIndex, int highestIndex,
+            int sentValue) {
+        super("THE INDEX ONLY VALID FROM " + lowestIndex
+                + " TO " + highestIndex + "!\n Your input: " + sentValue);
         this.lowestIndex = lowestIndex;
         this.highestIndex = highestIndex;
+        this.sentValue = sentValue;
     }
 
     /**
@@ -35,15 +39,6 @@ public class InvalidIndexException extends Exception {
     }
 
     /**
-     * Setting the lowest index for the Exception
-     *
-     * @param lowestIndex the lowest index
-     */
-    public void setLowestIndex(int lowestIndex) {
-        this.lowestIndex = lowestIndex;
-    }
-
-    /**
      * Getting the highest index that the index can be
      *
      * @return the highest index
@@ -53,12 +48,12 @@ public class InvalidIndexException extends Exception {
     }
 
     /**
-     * Setting the highest index for the Exception
+     * Getting the sent value from the user
      *
-     * @param highestIndex the highest index
+     * @return the value that user sent
      */
-    public void setHighestIndex(int highestIndex) {
-        this.highestIndex = highestIndex;
+    public int getSentValue() {
+        return sentValue;
     }
 
 }

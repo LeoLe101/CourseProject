@@ -40,7 +40,7 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
         }
         //catch if the index is valid or not
         if (index > count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         }
         //continue the process when every requirement passed
         Node newNode = new Node(obj);
@@ -67,7 +67,7 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
     public void removeAt(int index) throws InvalidIndexException {
         //catch if the index is valid or not
         if (index > count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         }
         Node currentNode = firstNode;
         Node exNode = null;
@@ -94,12 +94,8 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
      */
     @Override
     public void remove(Object obj) throws InvalidIndexException {
-        try {
             int index = find(obj);
             removeAt(index);
-        } catch (Exception e) {
-            throw new InvalidIndexException(0, count - 1);
-        }
     }
 
     /**
@@ -112,7 +108,7 @@ public class ObjectLinkedList extends ObjectList implements Copiable {
     public Object get(int index) throws InvalidIndexException{
         //catch if the index is valid or not
         if (index > count || index < 0) {
-            throw new InvalidIndexException(0, count - 1);
+            throw new InvalidIndexException(0, count, index);
         }
         if (index == 0) {
             return firstNode.getValue();
