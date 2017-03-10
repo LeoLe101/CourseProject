@@ -5,12 +5,14 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
@@ -18,13 +20,14 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import numberlist.InvalidIndexException;
+import numberlist.primitivelist.IntegerArrayList;
 
 /**
  * This GUI class is the user interface for the whole course project
@@ -35,7 +38,25 @@ import javafx.stage.Stage;
 public class GunDealerGUI extends Application {
 
     //fields
-    private Button[] buttons;
+    final static GunStorage gunCollection = new GunStorage("Thompson");
+    //text field for the user and the edit
+    private TextField txtId;
+    private TextField txtYear;
+    private TextField txtCost;
+    private TextField txtEditId;
+    private TextField txtEditYear;
+    private TextField txtEditCost;
+    //pane for the GUI
+    private FlowPane bottomPane;
+    private FlowPane topPane;
+    private BorderPane mainPane;
+    private ScrollPane leftPane;
+    private Pane centerPane;
+    private GridPane editPane;
+    //the main stage
+    Stage pStage;
+    private IntegerArrayList buttonCounter = new IntegerArrayList();
+    
 
     //GUI declaration method
     /**
@@ -44,33 +65,32 @@ public class GunDealerGUI extends Application {
      * @param primaryStage the primary stage to load the GUI
      */
     @Override
-    public void start(Stage primaryStage) {
-        //create buttons for the GUI
-        buttons = getButtons(5); //this is going to be called inside the add btn method
-
+    public void start(Stage primaryStage) throws InvalidIndexException {
+        pStage = primaryStage;
         //create pane for the scene
-        Pane mainPane = new Pane();
-
+        topPane = getTopPane();
+        bottomPane = getBottomPane();
+        leftPane = getLeftPane();
+        centerPane = new Pane();
+        mainPane = getRootPane(topPane, leftPane, centerPane, bottomPane);
         //set up a scene with pane in it
         Scene scene = new Scene(mainPane);
         //fill the scene with color
         scene.setFill(Color.ALICEBLUE);
-
         //set the stage for the sceen
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Gun Dealer Application");
-
+        pStage.setScene(scene);
+        pStage.setTitle("Gun Dealer Application");
         //set the location when the program pop up
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setX((screenBounds.getWidth()
-                - primaryStage.getWidth()) / 2);
-        primaryStage.setY((screenBounds.getHeight()
-                - primaryStage.getHeight()) / 2);
-
+        pStage.setX((screenBounds.getWidth()
+                - pStage.getWidth()) / 2);
+        pStage.setY((screenBounds.getHeight()
+                - pStage.getHeight()) / 2);
         //set the size of the program
-        primaryStage.setWidth(1000);
-        primaryStage.setHeight(800);
-        primaryStage.show();
+        pStage.setWidth(1000);
+        pStage.setHeight(800);
+        pStage.show();
+
     }
 
     //methods for Panes and Buttons
@@ -80,65 +100,93 @@ public class GunDealerGUI extends Application {
      *
      * @param topPane the top layout of the project
      * @param leftPane the left layout of the project
-     * @param rightPane the right layout of the project
      * @param centerPane the center layout of the project
      * @param bottomPane the bottom layout of the project
      * @return the root pane which includes every single pane in it
      */
-    public BorderPane getRootPane(Pane topPane, Pane leftPane, Pane rightPane,
+    public BorderPane getRootPane(Pane topPane, ScrollPane leftPane,
             Pane centerPane, Pane bottomPane) {
         BorderPane pane = new BorderPane();
         pane.setTop(topPane);
         pane.setLeft(leftPane);
         pane.setBottom(bottomPane);
-        pane.setRight(rightPane);
         pane.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE,
                 CornerRadii.EMPTY, Insets.EMPTY)));
         return pane;
     }
 
     /**
-     * Setting up the center layout for the GUI
-     *
-     * @return the center layout
+     * Setting up the center pane for the GUI
+     * 
+     * @param index the index of the button
+     * @param gunCollection the collection to get data
      */
-    public TilePane getCenterPane() {
-        //setting up the content in the pane
-        //label for prompting name
-        TextField lblName = new TextField("Name: ");
-        lblName.setEditable(false);
-        lblName.setMouseTransparent(true);
-        lblName.setFocusTraversable(false);
-        //label for prompting year
-        TextField lblYear = new TextField("Year: ");
-        lblYear.setEditable(false);
-        lblYear.setMouseTransparent(true);
-        lblYear.setFocusTraversable(false);
+    public void getCenterPane(int index, GunStorage gunCollection){
+        editPane = new GridPane();
+        //label for prompting ID
+        Label lblId = new Label("Gun ID: ");
+        GridPane.setHalignment(lblId, HPos.RIGHT);
+        editPane.add(lblId, 0, 1);
+        Label lblYear = new Label("Year: ");
+        GridPane.setHalignment(lblYear, HPos.RIGHT);
+        editPane.add(lblYear, 0, 2);
         //label for prompting cost
-        TextField lblCost = new TextField("Cost: ");
-        lblCost.setEditable(false);
-        lblCost.setMouseTransparent(true);
-        lblCost.setFocusTraversable(false);
-        //text field for name
-        TextField txtName = new TextField();
-        txtName.setPromptText("Gun name");
-        txtName.setMaxWidth(100);
+        Label lblCost = new Label("Cost: ");
+        GridPane.setHalignment(lblCost, HPos.RIGHT);
+        editPane.add(lblCost, 0, 3);
+        //text field for ID
+        txtEditId = new TextField();
+        txtEditId.setPromptText("ID");
+        txtEditId.setMaxWidth(100);
+        editPane.add(txtEditId, 1, 1);
         //text field for year
-        TextField txtYear = new TextField();
-        txtName.setPromptText("Year");
-        txtName.setMaxWidth(100);
+        txtEditYear = new TextField();
+        txtEditYear.setPromptText("Year");
+        txtEditYear.setMaxWidth(100);
+        editPane.add(txtEditYear, 1, 2);
         //text field for cost
-        TextField txtCost = new TextField();
-        txtName.setPromptText("Cost");
-        txtName.setMaxWidth(100);
+        txtEditCost = new TextField();
+        txtEditCost.setPromptText("Cost");
+        txtEditCost.setMaxWidth(100);
+        editPane.add(txtEditCost, 1, 3);
+        //setting up the button for update and remove
+        Button btnUpdate = new Button("Update gun info");
+        GridPane.setHalignment(btnUpdate, HPos.CENTER);
+        editPane.add(btnUpdate, 0, 4);
+        Button btnRemove = new Button("Remove profile");
+        GridPane.setHalignment(btnRemove, HPos.CENTER);
+        editPane.add(btnRemove, 1, 4);
+        btnUpdate.setOnAction(new EventHandler<ActionEvent>() { // This need some debugging because it only changes the first button WTF????
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    gunCollection.removeAt(index);
+                    gunCollection.addAt(index, Integer.valueOf(txtEditId.getText()),
+                             Integer.valueOf(txtEditYear.getText()),
+                             Integer.valueOf(txtEditCost.getText()));
+                    start(pStage);
+                } catch (InvalidIndexException ex) {
+                    ;
+                }
+            }
+        });
+        btnRemove.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    deleteGun();
+                } catch (InvalidIndexException ex) {
+                    ;
+                }
+            }
+        });
         //setting up the center pane
-        TilePane centerPane = new TilePane();
-        centerPane.getChildren().addAll(lblName, txtName, 
-                lblYear, txtYear, lblCost, txtCost);
-        centerPane.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE,
+        editPane.setAlignment(Pos.CENTER);
+        editPane.setPadding(new Insets(25, 25, 25, 25));
+        editPane.setVgap(30);
+        editPane.setHgap(30);
+        editPane.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE,
                 CornerRadii.EMPTY, Insets.EMPTY)));
-        centerPane.setAlignment(Pos.CENTER);
-        return centerPane;
     }
 
     /**
@@ -147,30 +195,13 @@ public class GunDealerGUI extends Application {
      * @return the top layout of the project
      */
     public FlowPane getTopPane() {
-        //setting the top pane
-        FlowPane topPane = new FlowPane();
-        topPane.setHgap(20);
-        topPane.setVgap(20);
         //setting up the content in the pane
         Button btnSave = new Button("Save");
         Button btnDelete = new Button("Delete");
         btnSave.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //this is where we code the save button using file handler
-                //SOMETHING FOUND ONLINE!!!!
-//                FileChooser fileChooser = new FileChooser();
-//
-//                //Set extension filter
-//                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-//                fileChooser.getExtensionFilters().add(extFilter);
-//
-//                //Show save file dialog
-//                File file = fileChooser.showSaveDialog(primaryStage);
-//
-//                if (file != null) {
-//                    SaveFile(Santa_Claus_Is_Coming_To_Town, file);
-//                }
+
             }
         });
         btnDelete.setOnAction(new EventHandler<ActionEvent>() {
@@ -179,7 +210,14 @@ public class GunDealerGUI extends Application {
                 //this is where we code the delete button using file handler   
             }
         });
+        //setting the top pane
+        FlowPane topPane = new FlowPane();
+        topPane.setHgap(500);
+        topPane.setPadding(new Insets(15, 15, 15, 15));
         topPane.getChildren().addAll(btnSave, btnDelete);
+        topPane.setAlignment(Pos.CENTER);
+        topPane.setBackground(new Background(new BackgroundFill(Color.GOLD,
+                CornerRadii.EMPTY, Insets.EMPTY)));
         return topPane;
     }
 
@@ -192,45 +230,51 @@ public class GunDealerGUI extends Application {
         //setting up the sort list
         ComboBox<String> sortingDropList = new ComboBox<>();
         sortingDropList.getItems().addAll(
-                "Sort by gun name", "Sort by year", "Sort by cost");
+                "Sort by id", "Sort by year", "Sort by cost");
         sortingDropList.setEditable(false);
         sortingDropList.setPromptText("Select a sort method");
         //the sorting is not yet implemented!!!!
 
         //setting up the content in the pane
         Button btnAdd = new Button("Add new info");
-        Button btnGraph = new Button("Graph");
+        Button btnAverage = new Button("Average");
         //text field for name
-        TextField txtName = new TextField();
-        txtName.setPromptText("Gun name");
-        txtName.setMaxWidth(100);
+        txtId = new TextField();
+        txtId.setPromptText("ID");
+        txtId.setMaxWidth(100);
         //text field for year
-        TextField txtYear = new TextField();
-        txtName.setPromptText("Year");
-        txtName.setMaxWidth(100);
+        txtYear = new TextField();
+        txtYear.setPromptText("Year");
+        txtYear.setMaxWidth(100);
         //text field for cost
-        TextField txtCost = new TextField();
-        txtName.setPromptText("Cost");
-        txtName.setMaxWidth(100);
-
+        txtCost = new TextField();
+        txtCost.setPromptText("Cost");
+        txtCost.setMaxWidth(100);
         btnAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //this is where we code the save button using file handler
+                try {
+                    addGun();
+                } catch (InvalidIndexException ex) {
+                    ;
+                }
             }
         });
-        btnGraph.setOnAction(new EventHandler<ActionEvent>() {
+        btnAverage.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //createGraph() this method need to be written first!!!
+
             }
         });
         //setting up the bottom layout
         FlowPane bottomPane = new FlowPane();
-        bottomPane.getChildren().addAll(sortingDropList, txtName, txtYear,
-                txtCost, btnAdd, btnGraph);
+        bottomPane.getChildren().addAll(sortingDropList, txtId, txtYear,
+                txtCost, btnAdd, btnAverage);
         bottomPane.setAlignment(Pos.CENTER);
-        bottomPane.setHgap(10);
+        bottomPane.setHgap(30);
+        bottomPane.setPadding(new Insets(15, 15, 15, 15));
+        bottomPane.setBackground(new Background(new BackgroundFill(Color.GOLD,
+                CornerRadii.EMPTY, Insets.EMPTY)));
         return bottomPane;
     }
 
@@ -239,66 +283,61 @@ public class GunDealerGUI extends Application {
      *
      * @return the left layout of the project
      */
-    public ScrollPane getLeftPane() {
+    public ScrollPane getLeftPane() throws InvalidIndexException {
+        List<Button> guns = new ArrayList<>();
+        for (int i = 0; i < gunCollection.getSize(); i++) {
+            guns.add(new Button(gunCollection.getId(i)
+                    + " (" + gunCollection.getYear(i) + "): $"
+                    + gunCollection.getCost(i)));
+            
+            guns.get(i).setMinSize(100, 20);
+            final int index = i;
+            guns.get(i).setOnAction(e -> {
+                try {
+                    getCenterPane(index, gunCollection);
+                    mainPane.setCenter(editPane);
+                    txtEditId.setText(String.valueOf(gunCollection.getId(index)));
+                    txtEditCost.setText(String.valueOf(gunCollection.getCost(index)));
+                    txtEditYear.setText(String.valueOf(gunCollection.getYear(index)));
+                    buttonCounter.add(gunCollection.getIndex());
+                } catch (InvalidIndexException ex) {
+                }
+
+            });
+        }
         ScrollPane leftPane = new ScrollPane();
         //create a VBox
         VBox pane = new VBox();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        List<Button> guns = new ArrayList<>();
-        //half way on the button :)
-//        for (int i = 0; i < gunStorage.getSize(); i++) {
-//            guns.add(new Button(gunStorage.getName() + 
-//                    " (" + gunStorage.getYear() + "): $" 
-//                    + gunStorage.getCost()));
-//            guns.get(i).setOnAction(e ->{})
-//        }
+        pane.setPadding(new Insets(20, 20, 20, 20));
+        pane.setAlignment(Pos.CENTER);
         pane.getChildren().addAll(guns);
         leftPane.setContent(pane);
-        leftPane.setBackground(new Background(new BackgroundFill(Color.GAINSBORO,
+        leftPane.setBackground(new Background(new BackgroundFill(Color.ALICEBLUE,
                 CornerRadii.EMPTY, Insets.EMPTY)));
         return leftPane;
     }
 
     /**
-     * This is the right layout of the GUI This only pop-up when the information
-     * from button is being populated
+     * Add the information from the user input
      *
-     * @return the right layout of the GUI
+     * @throws InvalidIndexException the exception of the invalid index
      */
-    public VBox getRightPane() {
-        VBox rightPane = new VBox();
-        //setting up the content in the pane
-        Button btnUpdate = new Button("Update gun info");
-        Button btnRemove = new Button("Remove profile");
-        btnUpdate.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //this is where we code the save button using file handler
-            }
-        });
-        btnRemove.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //this is where we code the delete button using file handler   
-            }
-        });
-        rightPane.getChildren().addAll(btnUpdate, btnRemove);
-        return rightPane;
+    public void addGun() throws InvalidIndexException {
+        gunCollection.add(Integer.valueOf(txtId.getText()),
+                Integer.valueOf(txtYear.getText()),
+                Integer.valueOf(txtCost.getText()));
+        start(pStage);
     }
 
     /**
-     * Setting up an array of button. This number will grow according to user's
-     * data
+     * Delete the information from the user input
      *
-     * @param numOfButton the number of button to be made
-     * @return the array of buttons
+     * @throws InvalidIndexException the exception of the invalid index
      */
-    public Button[] getButtons(int numOfButton) {
-        Button[] buttons = new Button[numOfButton];
-        for (int i = 0; i < numOfButton; i++) {
-            buttons[i] = new Button("Button " + i);
-        }
-        return buttons;
+    public void deleteGun() throws InvalidIndexException {
+        gunCollection.remove(Integer.valueOf(txtEditId.getText()),
+                Integer.valueOf(txtEditYear.getText()),
+                Integer.valueOf(txtEditCost.getText()));
+        start(pStage);
     }
-
 }
